@@ -1,6 +1,6 @@
 # Contact form for Etch Studio – with a Cloudflare Worker and your own SMTP server
 
-Etch Studio builds static sites and has no built-in form handling. This repo shows a small, self-hosted way to get a working contact form anyway:
+A free way to handle forms in Etch Studio with Cloudflare: a ready-made Etch component sends the form to a small Cloudflare Worker, and the worker delivers it to your inbox through your own mail server.
 
 ```
 Visitor's browser                Cloudflare Worker                    Your mail server
