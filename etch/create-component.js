@@ -357,7 +357,7 @@ const DATA = {
   },
   "keyframes": "@keyframes contact-form-spin {\n  to {\n    rotate: 1turn;\n  }\n}",
   "styles": {
-    ".contact-form": "--contact-form-text: #1f2328;\n--contact-form-muted: #656d76;\n--contact-form-border: #d0d7de;\n--contact-form-field-bg: #ffffff;\n--contact-form-accent: #1f2328;\n--contact-form-accent-text: #ffffff;\n--contact-form-focus: #0969da;\n--contact-form-success: #1a7f37;\n--contact-form-error: #cf222e;\n--contact-form-radius: 0.375rem;\n--contact-form-gap: 1.5rem;\n\ndisplay: flex;\nflex-direction: column;\ngap: var(--contact-form-gap);\ncolor: var(--contact-form-text);",
+    ".contact-form": "/* ACSS tokens when available, plain fallbacks otherwise */\n--contact-form-text: var(--text-dark, #1f2328);\n--contact-form-muted: var(--text-dark-muted, #656d76);\n--contact-form-border: var(--border-color-dark, #d0d7de);\n--contact-form-field-bg: var(--white, #ffffff);\n--contact-form-accent: var(--primary, #1f2328);\n--contact-form-accent-text: var(--white, #ffffff);\n--contact-form-focus: var(--focus-color, #0969da);\n--contact-form-success: var(--success-dark, var(--success, #1a7f37));\n--contact-form-error: var(--danger-dark, var(--danger, #cf222e));\n--contact-form-radius: var(--radius-s, 0.375rem);\n--contact-form-gap: var(--space-m, 1.5rem);\n\ndisplay: flex;\nflex-direction: column;\ngap: var(--contact-form-gap);\ncolor: var(--contact-form-text);",
     ".contact-form__honeypot": "display: none;",
     ".contact-form__row": "display: grid;\ngrid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));\ngap: var(--contact-form-gap);",
     ".contact-form__field": "display: flex;\nflex-direction: column;\ngap: 0.5rem;",

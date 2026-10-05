@@ -159,7 +159,7 @@ The form only sends on the **published** site, not inside the builder. Publish, 
 
 ## Styling
 
-All colours and sizes are custom properties on `.contact-form`, so you can theme the form without touching the component:
+All colours and sizes are custom properties on `.contact-form`, so you can theme the form without touching the component.
 
 ```css
 .contact-form {
@@ -170,6 +170,26 @@ All colours and sizes are custom properties on `.contact-form`, so you can theme
   --contact-form-gap: var(--space-m);
 }
 ```
+
+### Using it with Automatic.css (ACSS)
+
+If your site uses [Automatic.css](https://automaticcss.com), the form picks up your tokens automatically. No setup is needed. Every variable reads the ACSS token first and only falls back to a plain value when the token doesn't exist:
+
+| Form variable | ACSS token | Fallback |
+|---|---|---|
+| `--contact-form-text` | `--text-dark` | `#1f2328` |
+| `--contact-form-muted` | `--text-dark-muted` | `#656d76` |
+| `--contact-form-border` | `--border-color-dark` | `#d0d7de` |
+| `--contact-form-field-bg` | `--white` | `#ffffff` |
+| `--contact-form-accent` | `--primary` | `#1f2328` |
+| `--contact-form-accent-text` | `--white` | `#ffffff` |
+| `--contact-form-focus` | `--focus-color` | `#0969da` |
+| `--contact-form-success` | `--success-dark` → `--success` | `#1a7f37` |
+| `--contact-form-error` | `--danger-dark` → `--danger` | `#cf222e` |
+| `--contact-form-radius` | `--radius-s` | `0.375rem` |
+| `--contact-form-gap` | `--space-m` | `1.5rem` |
+
+To use different tokens, override the variable, for example `--contact-form-accent: var(--secondary);`. To use ACSS button classes instead, add `btn--primary` to `.contact-form__submit` and remove its background and colour declarations.
 
 States you can hook into:
 

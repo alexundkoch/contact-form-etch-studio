@@ -73,19 +73,21 @@ export const KEYFRAMES = `@keyframes contact-form-spin {
 }`;
 
 // One entry per class; CSS nesting (&) is supported by Etch and all current browsers.
-// Theme it through the custom properties on .contact-form (fallbacks keep it working without a framework).
+// Theme it through the custom properties on .contact-form: they use Automatic.css (ACSS) tokens when present
+// and fall back to plain values otherwise.
 export const STYLES = {
-  '.contact-form': `--contact-form-text: #1f2328;
---contact-form-muted: #656d76;
---contact-form-border: #d0d7de;
---contact-form-field-bg: #ffffff;
---contact-form-accent: #1f2328;
---contact-form-accent-text: #ffffff;
---contact-form-focus: #0969da;
---contact-form-success: #1a7f37;
---contact-form-error: #cf222e;
---contact-form-radius: 0.375rem;
---contact-form-gap: 1.5rem;
+  '.contact-form': `/* ACSS tokens when available, plain fallbacks otherwise */
+--contact-form-text: var(--text-dark, #1f2328);
+--contact-form-muted: var(--text-dark-muted, #656d76);
+--contact-form-border: var(--border-color-dark, #d0d7de);
+--contact-form-field-bg: var(--white, #ffffff);
+--contact-form-accent: var(--primary, #1f2328);
+--contact-form-accent-text: var(--white, #ffffff);
+--contact-form-focus: var(--focus-color, #0969da);
+--contact-form-success: var(--success-dark, var(--success, #1a7f37));
+--contact-form-error: var(--danger-dark, var(--danger, #cf222e));
+--contact-form-radius: var(--radius-s, 0.375rem);
+--contact-form-gap: var(--space-m, 1.5rem);
 
 display: flex;
 flex-direction: column;
