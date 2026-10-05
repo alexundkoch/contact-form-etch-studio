@@ -114,7 +114,7 @@ A subdomain is safer than a path route like `example.com/api/contact`, because i
 
 **Option A – copy & paste (easiest)**
 
-[`etch/contact-form.etch.json`](etch/contact-form.etch.json) is in Etch Studio's own clipboard format, the same JSON Etch puts on the clipboard when you copy a block. It contains the component **ContactForm** with its props, all class styles and the block script.
+[`etch/contact-form.etch.json`](etch/contact-form.etch.json) is in Etch Studio's own clipboard format, the same JSON Etch puts on the clipboard when you copy a block. It contains the component **ContactForm** with its props, all class styles and the block script. Tested with Etch Studio (October 2026).
 
 1. Open [`contact-form.etch.json`](etch/contact-form.etch.json). On GitHub, use the *Raw* button or the copy icon, and copy the **entire** content.
 2. In the Etch Studio builder, select the spot where the form should go, for example inside a container, and paste (`Cmd/Ctrl + V`).
