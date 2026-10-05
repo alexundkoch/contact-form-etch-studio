@@ -44,7 +44,7 @@ Form fields: **name**, **email**, **phone** (optional), **subject**, **message**
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/<you>/contact-form-etch-studio.git
+git clone https://github.com/alexundkoch/contact-form-etch-studio.git
 cd contact-form-etch-studio/worker
 npm install
 ```
