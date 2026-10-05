@@ -2,6 +2,7 @@
 //   etch/contact-form.html      plain HTML (props filled with their defaults)
 //   etch/contact-form.css       all class styles + keyframes
 //   etch/create-component.js    script for the Etch Connector that creates the component in Etch Studio
+//   etch/contact-form.etch.json Etch clipboard JSON – copy & paste into the Etch Studio builder
 // Run: node etch/build.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 import { KEY, DESCRIPTION, PROPS, TREE, KEYFRAMES, STYLES } from './src/component.mjs';
@@ -105,6 +106,57 @@ await etch.saveAsync();
 return { componentId: id, stylesheet: sheet.name, existingStylesKept: kept, next: 'Reload the Etch tab, insert the component and set the „Endpoint“ prop.' };
 `);
 
+// --- Etch clipboard JSON (copy the file content, click into the Etch Studio canvas, paste) --------
+// Format = what Etch Studio's own copy produces (version 2.1): one etch/component block plus the
+// component definition and its class styles. Stylesheets aren't part of it → keyframes go in by hand.
+const hashId = (text) => {
+  let h = 2166136261;
+  for (const ch of text) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  return h.toString(36).padStart(7, '0').slice(-7);
+};
+const COMPONENT_ID = 9001; // placeholder – Etch assigns its own on paste
+const toGutenberg = (node) => {
+  if (node.text !== undefined) {
+    return { blockName: 'etch/text', attrs: { metadata: { name: 'Text' }, content: node.text }, innerBlocks: [], innerHTML: '', innerContent: [] };
+  }
+  const children = node.children.map(toGutenberg);
+  const attrs = { metadata: { name: node.cls }, tag: node.tag, attributes: { ...node.attributes, class: node.cls }, styles: [hashId('.' + node.cls)] };
+  return {
+    blockName: 'etch/element',
+    attrs,
+    innerBlocks: children,
+    innerHTML: '\n'.repeat(Math.max(2, children.length * 2)),
+    innerContent: children.length ? ['\n', ...children.flatMap((_, i) => (i ? ['\n\n', null] : [null])), '\n'] : ['\n', '\n']
+  };
+};
+const formBlock = toGutenberg(TREE);
+formBlock.attrs = { ...formBlock.attrs, script: { code: Buffer.from(read('contact-form.js'), 'utf8').toString('base64'), id: hashId('script') } };
+
+write('contact-form.etch.json', JSON.stringify({
+  type: 'block',
+  gutenbergBlock: {
+    blockName: 'etch/component',
+    attrs: { metadata: { name: KEY }, ref: COMPONENT_ID, attributes: {} },
+    innerBlocks: [],
+    innerHTML: '\n\n',
+    innerContent: ['\n', '\n']
+  },
+  timestamp: '2026-10-05T00:00:00.000Z',
+  styles: Object.fromEntries(Object.entries(STYLES).map(([selector, css]) => [hashId(selector), { selector, collection: 'default', css, readonly: false }])),
+  components: {
+    [COMPONENT_ID]: {
+      id: COMPONENT_ID,
+      name: KEY,
+      key: KEY,
+      description: DESCRIPTION,
+      properties: PROPS.map(([name, key, value]) => ({ default: value, key, name, type: { primitive: 'string' } })),
+      blocks: [formBlock]
+    }
+  },
+  customMediaDefinitions: {},
+  version: 2.1
+}, null, 2) + '\n');
+
 // --- Demo page (open demo/index.html in a browser to preview the form) -------
 writeFileSync(new URL('../demo/index.html', dir), `<!doctype html>
 <html lang="en">
@@ -123,4 +175,4 @@ ${render(TREE, 1)}
 </html>
 `);
 
-console.log('Built contact-form.html, contact-form.css, create-component.js, demo/index.html');
+console.log('Built contact-form.html, contact-form.css, contact-form.etch.json, create-component.js, demo/index.html');

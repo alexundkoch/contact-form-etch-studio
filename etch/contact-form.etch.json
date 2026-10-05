@@ -1,0 +1,1101 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "metadata": {
+        "name": "ContactForm"
+      },
+      "ref": 9001,
+      "attributes": {}
+    },
+    "innerBlocks": [],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      "\n"
+    ]
+  },
+  "timestamp": "2026-10-05T00:00:00.000Z",
+  "styles": {
+    "1jorliw": {
+      "selector": ".contact-form",
+      "collection": "default",
+      "css": "/* ACSS tokens when available, plain fallbacks otherwise */\n--contact-form-text: var(--text-dark, #1f2328);\n--contact-form-muted: var(--text-dark-muted, #656d76);\n--contact-form-border: var(--border-color-dark, #d0d7de);\n--contact-form-field-bg: var(--white, #ffffff);\n--contact-form-accent: var(--primary, #1f2328);\n--contact-form-accent-text: var(--white, #ffffff);\n--contact-form-focus: var(--focus-color, #0969da);\n--contact-form-success: var(--success-dark, var(--success, #1a7f37));\n--contact-form-error: var(--danger-dark, var(--danger, #cf222e));\n--contact-form-radius: var(--radius-s, 0.375rem);\n--contact-form-gap: var(--space-m, 1.5rem);\n\ndisplay: flex;\nflex-direction: column;\ngap: var(--contact-form-gap);\ncolor: var(--contact-form-text);",
+      "readonly": false
+    },
+    "06v2oc8": {
+      "selector": ".contact-form__honeypot",
+      "collection": "default",
+      "css": "display: none;",
+      "readonly": false
+    },
+    "0qpsxvm": {
+      "selector": ".contact-form__row",
+      "collection": "default",
+      "css": "display: grid;\ngrid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));\ngap: var(--contact-form-gap);",
+      "readonly": false
+    },
+    "04ev6hm": {
+      "selector": ".contact-form__field",
+      "collection": "default",
+      "css": "display: flex;\nflex-direction: column;\ngap: 0.5rem;",
+      "readonly": false
+    },
+    "0ehkgtg": {
+      "selector": ".contact-form__label",
+      "collection": "default",
+      "css": "font-size: 0.875rem;\nfont-weight: 600;",
+      "readonly": false
+    },
+    "0bionjm": {
+      "selector": ".contact-form__input",
+      "collection": "default",
+      "css": "box-sizing: border-box;\ninline-size: 100%;\npadding: 0.75rem 1rem;\nborder: 1px solid var(--contact-form-border);\nborder-radius: var(--contact-form-radius);\nbackground: var(--contact-form-field-bg);\ncolor: inherit;\nfont: inherit;\n\n&:focus-visible {\n  outline: 2px solid var(--contact-form-focus);\n  outline-offset: 1px;\n}\n\n&:user-invalid {\n  border-color: var(--contact-form-error);\n}\n\n&:is(textarea) {\n  resize: vertical;\n  min-block-size: 8rem;\n}",
+      "readonly": false
+    },
+    "09s3jf4": {
+      "selector": ".contact-form__consent",
+      "collection": "default",
+      "css": "display: flex;\nalign-items: flex-start;\ngap: 0.75rem;\nfont-size: 0.875rem;\nline-height: 1.6;\ncursor: pointer;",
+      "readonly": false
+    },
+    "0csnvvf": {
+      "selector": ".contact-form__checkbox",
+      "collection": "default",
+      "css": "flex-shrink: 0;\ninline-size: 1.125rem;\nblock-size: 1.125rem;\nmargin: 0.15em 0 0;\naccent-color: var(--contact-form-accent);",
+      "readonly": false
+    },
+    "1l6j5q8": {
+      "selector": ".contact-form__consent-text",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "0eh65k6": {
+      "selector": ".contact-form__link",
+      "collection": "default",
+      "css": "color: inherit;\ntext-underline-offset: 0.2em;",
+      "readonly": false
+    },
+    "14l8cid": {
+      "selector": ".contact-form__actions",
+      "collection": "default",
+      "css": "display: flex;\nflex-wrap: wrap;\nalign-items: center;\ngap: 1rem;",
+      "readonly": false
+    },
+    "1s820ta": {
+      "selector": ".contact-form__submit",
+      "collection": "default",
+      "css": "box-sizing: border-box;\ndisplay: inline-flex;\nalign-items: center;\ngap: 0.625rem;\npadding: 0.875rem 1.5rem;\nborder: 0;\nborder-radius: var(--contact-form-radius);\nbackground: var(--contact-form-accent);\ncolor: var(--contact-form-accent-text);\nfont: inherit;\nfont-weight: 600;\ncursor: pointer;\n\n&:disabled {\n  opacity: 0.6;\n  cursor: progress;\n}\n\n[data-state=\"sending\"] & {\n  opacity: 1;\n}",
+      "readonly": false
+    },
+    "1pwjga2": {
+      "selector": ".contact-form__submit-text",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "0jpjnav": {
+      "selector": ".contact-form__spinner",
+      "collection": "default",
+      "css": "display: none;\ninline-size: 1em;\nblock-size: 1em;\nborder: 2px solid currentColor;\nborder-inline-end-color: transparent;\nborder-radius: 50%;\nanimation: contact-form-spin 0.7s linear infinite;\n\n[data-state=\"sending\"] & {\n  display: block;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  animation-duration: 2s;\n}",
+      "readonly": false
+    },
+    "05524rr": {
+      "selector": ".contact-form__required",
+      "collection": "default",
+      "css": "font-size: 0.875rem;\ncolor: var(--contact-form-muted);",
+      "readonly": false
+    },
+    "0ix17o0": {
+      "selector": ".contact-form__status",
+      "collection": "default",
+      "css": "margin: 0;\npadding: 0.75rem 1rem;\nborder-inline-start: 3px solid currentColor;\nfont-weight: 500;\nline-height: 1.5;\n\n&:empty {\n  display: none;\n}\n\n[data-state=\"sending\"] > & {\n  padding-inline: 0;\n  border-inline-start-color: transparent;\n  font-weight: 400;\n  color: var(--contact-form-muted);\n}\n\n[data-state=\"success\"] > & {\n  color: var(--contact-form-success);\n  background: color-mix(in srgb, var(--contact-form-success) 10%, transparent);\n}\n\n[data-state=\"error\"] > & {\n  color: var(--contact-form-error);\n  background: color-mix(in srgb, var(--contact-form-error) 8%, transparent);\n}",
+      "readonly": false
+    }
+  },
+  "components": {
+    "9001": {
+      "id": 9001,
+      "name": "ContactForm",
+      "key": "ContactForm",
+      "description": "Contact form (name, email, phone, subject, message, consent) that posts JSON to a Cloudflare Worker. BEM block .contact-form, block script on the form.",
+      "properties": [
+        {
+          "default": "https://api.example.com",
+          "key": "endpoint",
+          "name": "Endpoint (worker URL)",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "default": "/privacy",
+          "key": "privacyUrl",
+          "name": "Privacy policy URL",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "default": "Send message",
+          "key": "submitText",
+          "name": "Submit button text",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "default": "Sending your message …",
+          "key": "msgSending",
+          "name": "Message: sending",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "default": "Thank you! Your message has been sent.",
+          "key": "msgSuccess",
+          "name": "Message: success",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "default": "Something went wrong. Please try again later.",
+          "key": "msgError",
+          "name": "Message: error",
+          "type": {
+            "primitive": "string"
+          }
+        }
+      ],
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "contact-form"
+            },
+            "tag": "form",
+            "attributes": {
+              "id": "contact-form",
+              "action": "{props.endpoint}",
+              "method": "post",
+              "aria-label": "Contact form",
+              "data-contact-form": "",
+              "data-msg-sending": "{props.msgSending}",
+              "data-msg-success": "{props.msgSuccess}",
+              "data-msg-error": "{props.msgError}",
+              "class": "contact-form"
+            },
+            "styles": [
+              "1jorliw"
+            ],
+            "script": {
+              "code": "Ly8gQ29udGFjdCBmb3JtIOKGkiBDbG91ZGZsYXJlIFdvcmtlci4gQmxvY2sgc2NyaXB0IG9uIGZvcm1bZGF0YS1jb250YWN0LWZvcm1dOyB0aGUgZW5kcG9pbnQgaXMgdGhlIGZvcm0ncyBhY3Rpb24gYXR0cmlidXRlLgovLyBOYXRpdmUgdmFsaWRhdGlvbiAocmVxdWlyZWQsIHR5cGU9ZW1haWwpIHJ1bnMgZmlyc3Qg4oCTIHRoZSBzdWJtaXQgZXZlbnQgb25seSBmaXJlcyBmb3IgdmFsaWQgZm9ybXMuCi8vIFNlbmRzIEpTT04gdmlhIGZldGNoLCBzaG93cyB0aGUgcmVzdWx0IGluIFtkYXRhLWNvbnRhY3Qtc3RhdHVzXSBhbmQgc2V0cyBkYXRhLXN0YXRlPSJzZW5kaW5nIiB8ICJzdWNjZXNzIiB8ICJlcnJvciIgb24gdGhlIGZvcm0uCi8vIE1lc3NhZ2VzIGNvbWUgZnJvbSBkYXRhLW1zZy1zZW5kaW5nIC8gZGF0YS1tc2ctc3VjY2VzcyAvIGRhdGEtbXNnLWVycm9yIG9uIHRoZSBmb3JtIChjb21wb25lbnQgcHJvcHMpLgovLyBPbmx5IHdvcmtzIG9uIHRoZSBwdWJsaXNoZWQgc2l0ZSwgbm90IGluc2lkZSB0aGUgYnVpbGRlci4KKCgpID0+IHsKICBjb25zdCBpbml0ID0gKCkgPT4gewogICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnZm9ybVtkYXRhLWNvbnRhY3QtZm9ybV06bm90KFtkYXRhLWNvbnRhY3QtcmVhZHldKScpLmZvckVhY2goKGZvcm0pID0+IHsKICAgICAgZm9ybS5zZXRBdHRyaWJ1dGUoJ2RhdGEtY29udGFjdC1yZWFkeScsICcnKTsKICAgICAgY29uc3Qgc3RhdHVzID0gZm9ybS5xdWVyeVNlbGVjdG9yKCdbZGF0YS1jb250YWN0LXN0YXR1c10nKTsKICAgICAgY29uc3Qgc3VibWl0ID0gZm9ybS5xdWVyeVNlbGVjdG9yKCdbdHlwZT0ic3VibWl0Il0nKTsKICAgICAgY29uc3QgbXNnID0gKGtleSwgZmFsbGJhY2spID0+IGZvcm0uZ2V0QXR0cmlidXRlKGBkYXRhLW1zZy0ke2tleX1gKSB8fCBmYWxsYmFjazsKCiAgICAgIGNvbnN0IHNob3cgPSAoc3RhdGUsIG1lc3NhZ2UpID0+IHsKICAgICAgICBmb3JtLnNldEF0dHJpYnV0ZSgnZGF0YS1zdGF0ZScsIHN0YXRlKTsKICAgICAgICBpZiAoc3RhdHVzKSBzdGF0dXMudGV4dENvbnRlbnQgPSBtZXNzYWdlOwogICAgICB9OwoKICAgICAgZm9ybS5hZGRFdmVudExpc3RlbmVyKCdzdWJtaXQnLCBhc3luYyAoZXZlbnQpID0+IHsKICAgICAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpOwogICAgICAgIGlmIChmb3JtLmdldEF0dHJpYnV0ZSgnZGF0YS1zdGF0ZScpID09PSAnc2VuZGluZycpIHJldHVybjsKCiAgICAgICAgY29uc3QgZmllbGRzID0gbmV3IEZvcm1EYXRhKGZvcm0pOwogICAgICAgIGNvbnN0IHBheWxvYWQgPSB7CiAgICAgICAgICBuYW1lOiBmaWVsZHMuZ2V0KCduYW1lJyksCiAgICAgICAgICBlbWFpbDogZmllbGRzLmdldCgnZW1haWwnKSwKICAgICAgICAgIHBob25lOiBmaWVsZHMuZ2V0KCdwaG9uZScpLAogICAgICAgICAgc3ViamVjdDogZmllbGRzLmdldCgnc3ViamVjdCcpLAogICAgICAgICAgbWVzc2FnZTogZmllbGRzLmdldCgnbWVzc2FnZScpLAogICAgICAgICAgY29uc2VudDogZmllbGRzLmdldCgnY29uc2VudCcpICE9PSBudWxsLAogICAgICAgICAgd2Vic2l0ZTogZmllbGRzLmdldCgnd2Vic2l0ZScpLCAvLyBob25leXBvdAogICAgICAgIH07CgogICAgICAgIHNob3coJ3NlbmRpbmcnLCBtc2coJ3NlbmRpbmcnLCAnU2VuZGluZyB5b3VyIG1lc3NhZ2Ug4oCmJykpOwogICAgICAgIGlmIChzdWJtaXQpIHN1Ym1pdC5kaXNhYmxlZCA9IHRydWU7CgogICAgICAgIHRyeSB7CiAgICAgICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZvcm0uYWN0aW9uLCB7CiAgICAgICAgICAgIG1ldGhvZDogJ1BPU1QnLAogICAgICAgICAgICBoZWFkZXJzOiB7ICdDb250ZW50LVR5cGUnOiAnYXBwbGljYXRpb24vanNvbicgfSwKICAgICAgICAgICAgYm9keTogSlNPTi5zdHJpbmdpZnkocGF5bG9hZCksCiAgICAgICAgICB9KTsKICAgICAgICAgIGlmICghcmVzcG9uc2Uub2spIHRocm93IG5ldyBFcnJvcigncmVxdWVzdF9mYWlsZWQnKTsKICAgICAgICAgIGZvcm0ucmVzZXQoKTsKICAgICAgICAgIHNob3coJ3N1Y2Nlc3MnLCBtc2coJ3N1Y2Nlc3MnLCAnVGhhbmsgeW91ISBZb3VyIG1lc3NhZ2UgaGFzIGJlZW4gc2VudC4nKSk7CiAgICAgICAgfSBjYXRjaCB7CiAgICAgICAgICBzaG93KCdlcnJvcicsIG1zZygnZXJyb3InLCAnU29tZXRoaW5nIHdlbnQgd3JvbmcuIFBsZWFzZSB0cnkgYWdhaW4uJykpOwogICAgICAgIH0gZmluYWxseSB7CiAgICAgICAgICBpZiAoc3VibWl0KSBzdWJtaXQuZGlzYWJsZWQgPSBmYWxzZTsKICAgICAgICB9CiAgICAgIH0pOwogICAgfSk7CiAgfTsKCiAgaWYgKGRvY3VtZW50LnJlYWR5U3RhdGUgPT09ICdsb2FkaW5nJykgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGluaXQpOwogIGVsc2UgaW5pdCgpOwp9KSgpOwo=",
+              "id": "08y2pii"
+            }
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__honeypot"
+                },
+                "tag": "div",
+                "attributes": {
+                  "hidden": "",
+                  "aria-hidden": "true",
+                  "class": "contact-form__honeypot"
+                },
+                "styles": [
+                  "06v2oc8"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__label"
+                    },
+                    "tag": "label",
+                    "attributes": {
+                      "for": "contact-form-website",
+                      "class": "contact-form__label"
+                    },
+                    "styles": [
+                      "0ehkgtg"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "Website"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__input"
+                    },
+                    "tag": "input",
+                    "attributes": {
+                      "id": "contact-form-website",
+                      "name": "website",
+                      "type": "text",
+                      "tabindex": "-1",
+                      "autocomplete": "off",
+                      "class": "contact-form__input"
+                    },
+                    "styles": [
+                      "0bionjm"
+                    ]
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__row"
+                },
+                "tag": "div",
+                "attributes": {
+                  "class": "contact-form__row"
+                },
+                "styles": [
+                  "0qpsxvm"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__field"
+                    },
+                    "tag": "div",
+                    "attributes": {
+                      "class": "contact-form__field"
+                    },
+                    "styles": [
+                      "04ev6hm"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__label"
+                        },
+                        "tag": "label",
+                        "attributes": {
+                          "for": "contact-form-name",
+                          "class": "contact-form__label"
+                        },
+                        "styles": [
+                          "0ehkgtg"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Name *"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__input"
+                        },
+                        "tag": "input",
+                        "attributes": {
+                          "id": "contact-form-name",
+                          "name": "name",
+                          "type": "text",
+                          "autocomplete": "name",
+                          "required": "",
+                          "class": "contact-form__input"
+                        },
+                        "styles": [
+                          "0bionjm"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__field"
+                    },
+                    "tag": "div",
+                    "attributes": {
+                      "class": "contact-form__field"
+                    },
+                    "styles": [
+                      "04ev6hm"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__label"
+                        },
+                        "tag": "label",
+                        "attributes": {
+                          "for": "contact-form-email",
+                          "class": "contact-form__label"
+                        },
+                        "styles": [
+                          "0ehkgtg"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Email *"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__input"
+                        },
+                        "tag": "input",
+                        "attributes": {
+                          "id": "contact-form-email",
+                          "name": "email",
+                          "type": "email",
+                          "autocomplete": "email",
+                          "required": "",
+                          "class": "contact-form__input"
+                        },
+                        "styles": [
+                          "0bionjm"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__row"
+                },
+                "tag": "div",
+                "attributes": {
+                  "class": "contact-form__row"
+                },
+                "styles": [
+                  "0qpsxvm"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__field"
+                    },
+                    "tag": "div",
+                    "attributes": {
+                      "class": "contact-form__field"
+                    },
+                    "styles": [
+                      "04ev6hm"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__label"
+                        },
+                        "tag": "label",
+                        "attributes": {
+                          "for": "contact-form-phone",
+                          "class": "contact-form__label"
+                        },
+                        "styles": [
+                          "0ehkgtg"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Phone"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__input"
+                        },
+                        "tag": "input",
+                        "attributes": {
+                          "id": "contact-form-phone",
+                          "name": "phone",
+                          "type": "tel",
+                          "autocomplete": "tel",
+                          "class": "contact-form__input"
+                        },
+                        "styles": [
+                          "0bionjm"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__field"
+                    },
+                    "tag": "div",
+                    "attributes": {
+                      "class": "contact-form__field"
+                    },
+                    "styles": [
+                      "04ev6hm"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__label"
+                        },
+                        "tag": "label",
+                        "attributes": {
+                          "for": "contact-form-subject",
+                          "class": "contact-form__label"
+                        },
+                        "styles": [
+                          "0ehkgtg"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Subject *"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__input"
+                        },
+                        "tag": "input",
+                        "attributes": {
+                          "id": "contact-form-subject",
+                          "name": "subject",
+                          "type": "text",
+                          "required": "",
+                          "class": "contact-form__input"
+                        },
+                        "styles": [
+                          "0bionjm"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__field"
+                },
+                "tag": "div",
+                "attributes": {
+                  "class": "contact-form__field"
+                },
+                "styles": [
+                  "04ev6hm"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__label"
+                    },
+                    "tag": "label",
+                    "attributes": {
+                      "for": "contact-form-message",
+                      "class": "contact-form__label"
+                    },
+                    "styles": [
+                      "0ehkgtg"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "Message *"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__input"
+                    },
+                    "tag": "textarea",
+                    "attributes": {
+                      "id": "contact-form-message",
+                      "name": "message",
+                      "rows": "5",
+                      "required": "",
+                      "class": "contact-form__input"
+                    },
+                    "styles": [
+                      "0bionjm"
+                    ]
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__consent"
+                },
+                "tag": "label",
+                "attributes": {
+                  "class": "contact-form__consent"
+                },
+                "styles": [
+                  "09s3jf4"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__checkbox"
+                    },
+                    "tag": "input",
+                    "attributes": {
+                      "type": "checkbox",
+                      "name": "consent",
+                      "required": "",
+                      "class": "contact-form__checkbox"
+                    },
+                    "styles": [
+                      "0csnvvf"
+                    ]
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__consent-text"
+                    },
+                    "tag": "span",
+                    "attributes": {
+                      "class": "contact-form__consent-text"
+                    },
+                    "styles": [
+                      "1l6j5q8"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "I agree that my details will be stored to process my request. See the "
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__link"
+                        },
+                        "tag": "a",
+                        "attributes": {
+                          "href": "{props.privacyUrl}",
+                          "class": "contact-form__link"
+                        },
+                        "styles": [
+                          "0eh65k6"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "privacy policy"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "."
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__actions"
+                },
+                "tag": "div",
+                "attributes": {
+                  "class": "contact-form__actions"
+                },
+                "styles": [
+                  "14l8cid"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__submit"
+                    },
+                    "tag": "button",
+                    "attributes": {
+                      "type": "submit",
+                      "class": "contact-form__submit"
+                    },
+                    "styles": [
+                      "1s820ta"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__submit-text"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "class": "contact-form__submit-text"
+                        },
+                        "styles": [
+                          "1pwjga2"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "{props.submitText}"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "contact-form__spinner"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "aria-hidden": "true",
+                          "class": "contact-form__spinner"
+                        },
+                        "styles": [
+                          "0jpjnav"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "contact-form__required"
+                    },
+                    "tag": "span",
+                    "attributes": {
+                      "class": "contact-form__required"
+                    },
+                    "styles": [
+                      "05524rr"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "* Required"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "contact-form__status"
+                },
+                "tag": "p",
+                "attributes": {
+                  "role": "status",
+                  "aria-live": "polite",
+                  "data-contact-status": "",
+                  "class": "contact-form__status"
+                },
+                "styles": [
+                  "0ix17o0"
+                ]
+              },
+              "innerBlocks": [],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n\n",
+            null,
+            "\n\n",
+            null,
+            "\n\n",
+            null,
+            "\n\n",
+            null,
+            "\n\n",
+            null,
+            "\n\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "customMediaDefinitions": {},
+  "version": 2.1
+}

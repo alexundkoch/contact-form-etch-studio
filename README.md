@@ -21,7 +21,8 @@ Visitor's browser                Cloudflare Worker                    Your mail 
 | Path | What it is |
 |---|---|
 | [`worker/`](worker/) | The Cloudflare Worker: [`src/index.js`](worker/src/index.js) and [`wrangler.toml`](worker/wrangler.toml). |
-| [`etch/create-component.js`](etch/create-component.js) | Creates the Etch component **ContactForm** in your project (styles, props, script) via the Etch Connector. |
+| [`etch/contact-form.etch.json`](etch/contact-form.etch.json) | **Copy & paste into Etch Studio:** the component with styles and script, in Etch's clipboard format. |
+| [`etch/create-component.js`](etch/create-component.js) | Alternative: creates the Etch component **ContactForm** in your project (styles, props, script) via the Etch Connector. |
 | [`etch/contact-form.html`](etch/contact-form.html) | The same form as plain HTML, to copy and paste. |
 | [`etch/contact-form.css`](etch/contact-form.css) | All styles. BEM block `.contact-form`, themeable via `--contact-form-*` custom properties. |
 | [`etch/contact-form.js`](etch/contact-form.js) | The block script: sends the form as JSON and shows the result. |
@@ -110,7 +111,26 @@ A subdomain is safer than a path route like `example.com/api/contact`, because i
 
 ### 6. Add the form to Etch Studio
 
-**Option A – create the component automatically (recommended)**
+**Option A – copy & paste (easiest)**
+
+[`etch/contact-form.etch.json`](etch/contact-form.etch.json) is in Etch Studio's own clipboard format, the same JSON Etch puts on the clipboard when you copy a block. It contains the component **ContactForm** with its props, all class styles and the block script.
+
+1. Open [`contact-form.etch.json`](etch/contact-form.etch.json). On GitHub, use the *Raw* button or the copy icon, and copy the **entire** content.
+2. In the Etch Studio builder, select the spot where the form should go, for example inside a container, and paste (`Cmd/Ctrl + V`).
+3. Add the keyframes for the loading spinner to one of your stylesheets, for example **Main**. Etch's clipboard format carries class styles but no stylesheets:
+
+   ```css
+   @keyframes contact-form-spin {
+     to {
+       rotate: 1turn;
+     }
+   }
+   ```
+
+   Without this, the form works, but the spinner doesn't turn.
+4. Set the component's props (see below) and save.
+
+**Option B – create the component with the Etch Connector**
 
 [`etch/create-component.js`](etch/create-component.js) uses the [Etch Connector](https://www.npmjs.com/package/@digital-gravy/etch-connector) to create everything in your open Etch Studio tab:
 
@@ -136,7 +156,7 @@ Then reload the tab, insert **ContactForm** on your contact page and set its pro
 | Submit button text | `Send message` | |
 | Message: sending / success / error | English defaults | translate as needed |
 
-**Option B – build it by hand**
+**Option C – build it by hand**
 
 Rebuild the markup from [`contact-form.html`](etch/contact-form.html) in Etch. Then add each class with the CSS from [`contact-form.css`](etch/contact-form.css), put the `@keyframes` into a stylesheet, and add [`contact-form.js`](etch/contact-form.js) as the block script on the `<form>`.
 
