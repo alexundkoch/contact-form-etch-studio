@@ -1,6 +1,6 @@
 # Contact form for Etch Studio – with a Cloudflare Worker and your own SMTP server
 
-A free way to handle forms in Etch Studio with Cloudflare: an Etch component sends the form to a Cloudflare Worker, which delivers it to your inbox through your own mail server.
+A free way to handle forms in Etch Studio with Cloudflare: an Etch form component sends each submission to a Cloudflare Worker, which delivers it to your inbox through your own mail server.
 
 ```
 Etch component ──JSON──▶ Cloudflare Worker ──SMTP──▶ your mail server ──▶ inbox
