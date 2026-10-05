@@ -33,3 +33,4 @@ invocation_logs = true
 #   MAIL_FROM       sender address – must be the SMTP login (most servers reject other senders)
 #   MAIL_TO         recipient(s), comma-separated
 #   RESEND_API_KEY  optional fallback
+#   TURNSTILE_SECRET optional: Cloudflare Turnstile secret key – when set, every submission needs a valid token

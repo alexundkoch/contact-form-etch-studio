@@ -11,7 +11,9 @@ export const PROPS = [
   ['Submit button text', 'submitText', 'Send message'],
   ['Message: sending', 'msgSending', 'Sending your message …'],
   ['Message: success', 'msgSuccess', 'Thank you! Your message has been sent.'],
-  ['Message: error', 'msgError', 'Something went wrong. Please try again later.']
+  ['Message: error', 'msgError', 'Something went wrong. Please try again later.'],
+  ['Message: security check', 'msgVerify', 'Please complete the security check above the button.'],
+  ['Turnstile site key (empty = off)', 'turnstileSiteKey', '']
 ];
 
 const el = (tag, cls, attributes = {}, children = []) => ({ tag, cls, attributes, children });
@@ -31,7 +33,8 @@ export const TREE = el('form', 'contact-form', {
   'data-contact-form': '',
   'data-msg-sending': '{props.msgSending}',
   'data-msg-success': '{props.msgSuccess}',
-  'data-msg-error': '{props.msgError}'
+  'data-msg-error': '{props.msgError}',
+  'data-msg-verify': '{props.msgVerify}'
 }, [
   // Honeypot: hidden from people and screen readers, bots tend to fill it
   el('div', 'contact-form__honeypot', { hidden: '', 'aria-hidden': 'true' }, [
@@ -55,6 +58,8 @@ export const TREE = el('form', 'contact-form', {
       txt('.')
     ])
   ]),
+  // Optional Cloudflare Turnstile – stays empty (and hidden) without a site key
+  el('div', 'contact-form__turnstile', { 'data-turnstile-sitekey': '{props.turnstileSiteKey}' }),
   el('div', 'contact-form__actions', {}, [
     el('button', 'contact-form__submit', { type: 'submit' }, [
       el('span', 'contact-form__submit-text', {}, [txt('{props.submitText}')]),
@@ -147,6 +152,10 @@ accent-color: var(--contact-form-accent);`,
 
   '.contact-form__link': `color: inherit;
 text-underline-offset: 0.2em;`,
+
+  '.contact-form__turnstile': `&:empty {
+  display: none;
+}`,
 
   '.contact-form__actions': `display: flex;
 flex-wrap: wrap;

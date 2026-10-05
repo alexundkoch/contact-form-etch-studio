@@ -41,6 +41,16 @@ const DATA = {
       "Message: error",
       "msgError",
       "Something went wrong. Please try again later."
+    ],
+    [
+      "Message: security check",
+      "msgVerify",
+      "Please complete the security check above the button."
+    ],
+    [
+      "Turnstile site key (empty = off)",
+      "turnstileSiteKey",
+      ""
     ]
   ],
   "tree": {
@@ -54,7 +64,8 @@ const DATA = {
       "data-contact-form": "",
       "data-msg-sending": "{props.msgSending}",
       "data-msg-success": "{props.msgSuccess}",
-      "data-msg-error": "{props.msgError}"
+      "data-msg-error": "{props.msgError}",
+      "data-msg-verify": "{props.msgVerify}"
     },
     "children": [
       {
@@ -301,6 +312,14 @@ const DATA = {
       },
       {
         "tag": "div",
+        "cls": "contact-form__turnstile",
+        "attributes": {
+          "data-turnstile-sitekey": "{props.turnstileSiteKey}"
+        },
+        "children": []
+      },
+      {
+        "tag": "div",
         "cls": "contact-form__actions",
         "attributes": {},
         "children": [
@@ -367,6 +386,7 @@ const DATA = {
     ".contact-form__checkbox": "flex-shrink: 0;\ninline-size: 1.125rem;\nblock-size: 1.125rem;\nmargin: 0.15em 0 0;\naccent-color: var(--contact-form-accent);",
     ".contact-form__consent-text": "",
     ".contact-form__link": "color: inherit;\ntext-underline-offset: 0.2em;",
+    ".contact-form__turnstile": "&:empty {\n  display: none;\n}",
     ".contact-form__actions": "display: flex;\nflex-wrap: wrap;\nalign-items: center;\ngap: 1rem;",
     ".contact-form__submit": "box-sizing: border-box;\ndisplay: inline-flex;\nalign-items: center;\ngap: 0.625rem;\npadding: 0.875rem 1.5rem;\nborder: 0;\nborder-radius: var(--contact-form-radius);\nbackground: var(--contact-form-accent);\ncolor: var(--contact-form-accent-text);\nfont: inherit;\nfont-weight: 600;\ncursor: pointer;\n\n&:disabled {\n  opacity: 0.6;\n  cursor: progress;\n}\n\n[data-state=\"sending\"] & {\n  opacity: 1;\n}",
     ".contact-form__submit-text": "",
@@ -374,7 +394,7 @@ const DATA = {
     ".contact-form__required": "font-size: 0.875rem;\ncolor: var(--contact-form-muted);",
     ".contact-form__status": "margin: 0;\npadding: 0.75rem 1rem;\nborder-inline-start: 3px solid currentColor;\nfont-weight: 500;\nline-height: 1.5;\n\n&:empty {\n  display: none;\n}\n\n[data-state=\"sending\"] > & {\n  padding-inline: 0;\n  border-inline-start-color: transparent;\n  font-weight: 400;\n  color: var(--contact-form-muted);\n}\n\n[data-state=\"success\"] > & {\n  color: var(--contact-form-success);\n  background: color-mix(in srgb, var(--contact-form-success) 10%, transparent);\n}\n\n[data-state=\"error\"] > & {\n  color: var(--contact-form-error);\n  background: color-mix(in srgb, var(--contact-form-error) 8%, transparent);\n}"
   },
-  "script": "// Contact form → Cloudflare Worker. Block script on form[data-contact-form]; the endpoint is the form's action attribute.\n// Native validation (required, type=email) runs first – the submit event only fires for valid forms.\n// Sends JSON via fetch, shows the result in [data-contact-status] and sets data-state=\"sending\" | \"success\" | \"error\" on the form.\n// Messages come from data-msg-sending / data-msg-success / data-msg-error on the form (component props).\n// Only works on the published site, not inside the builder.\n(() => {\n  const init = () => {\n    document.querySelectorAll('form[data-contact-form]:not([data-contact-ready])').forEach((form) => {\n      form.setAttribute('data-contact-ready', '');\n      const status = form.querySelector('[data-contact-status]');\n      const submit = form.querySelector('[type=\"submit\"]');\n      const msg = (key, fallback) => form.getAttribute(`data-msg-${key}`) || fallback;\n\n      const show = (state, message) => {\n        form.setAttribute('data-state', state);\n        if (status) status.textContent = message;\n      };\n\n      form.addEventListener('submit', async (event) => {\n        event.preventDefault();\n        if (form.getAttribute('data-state') === 'sending') return;\n\n        const fields = new FormData(form);\n        const payload = {\n          name: fields.get('name'),\n          email: fields.get('email'),\n          phone: fields.get('phone'),\n          subject: fields.get('subject'),\n          message: fields.get('message'),\n          consent: fields.get('consent') !== null,\n          website: fields.get('website'), // honeypot\n        };\n\n        show('sending', msg('sending', 'Sending your message …'));\n        if (submit) submit.disabled = true;\n\n        try {\n          const response = await fetch(form.action, {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify(payload),\n          });\n          if (!response.ok) throw new Error('request_failed');\n          form.reset();\n          show('success', msg('success', 'Thank you! Your message has been sent.'));\n        } catch {\n          show('error', msg('error', 'Something went wrong. Please try again.'));\n        } finally {\n          if (submit) submit.disabled = false;\n        }\n      });\n    });\n  };\n\n  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);\n  else init();\n})();\n"
+  "script": "// Contact form → Cloudflare Worker. Block script on form[data-contact-form]; the endpoint is the form's action attribute.\n// Native validation (required, type=email) runs first – the submit event only fires for valid forms.\n// Sends JSON via fetch, shows the result in [data-contact-status] and sets data-state=\"sending\" | \"success\" | \"error\" on the form.\n// Messages come from data-msg-sending / -success / -error / -verify on the form (component props).\n// Optional Cloudflare Turnstile: [data-turnstile-sitekey] (component prop) – empty = off, nothing is loaded.\n// Only works on the published site, not inside the builder.\n(() => {\n  let turnstileReady;\n  const loadTurnstile = () => {\n    turnstileReady ||= new Promise((resolve, reject) => {\n      if (window.turnstile) return resolve(window.turnstile);\n      const script = document.createElement('script');\n      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';\n      script.async = true;\n      script.onload = () => resolve(window.turnstile);\n      script.onerror = reject;\n      document.head.append(script);\n    });\n    return turnstileReady;\n  };\n\n  const init = () => {\n    document.querySelectorAll('form[data-contact-form]:not([data-contact-ready])').forEach((form) => {\n      form.setAttribute('data-contact-ready', '');\n      const status = form.querySelector('[data-contact-status]');\n      const submit = form.querySelector('[type=\"submit\"]');\n      const msg = (key, fallback) => form.getAttribute(`data-msg-${key}`) || fallback;\n\n      const show = (state, message) => {\n        form.setAttribute('data-state', state);\n        if (status) status.textContent = message;\n      };\n\n      // Turnstile only when a site key is set (unresolved builder placeholders like {props.…} are ignored)\n      const widget = form.querySelector('[data-turnstile-sitekey]');\n      const sitekey = widget ? widget.getAttribute('data-turnstile-sitekey').trim() : '';\n      const useTurnstile = Boolean(sitekey) && !sitekey.startsWith('{');\n      let widgetId = null;\n      if (useTurnstile) {\n        loadTurnstile()\n          .then((turnstile) => { widgetId = turnstile.render(widget, { sitekey, action: 'contact', language: document.documentElement.lang || 'auto' }); })\n          .catch(() => show('error', msg('error', 'Something went wrong. Please try again later.')));\n      }\n\n      form.addEventListener('submit', async (event) => {\n        event.preventDefault();\n        if (form.getAttribute('data-state') === 'sending') return;\n\n        const fields = new FormData(form);\n        const payload = {\n          name: fields.get('name'),\n          email: fields.get('email'),\n          phone: fields.get('phone'),\n          subject: fields.get('subject'),\n          message: fields.get('message'),\n          consent: fields.get('consent') !== null,\n          website: fields.get('website'), // honeypot\n        };\n\n        if (useTurnstile) {\n          payload.turnstile = widgetId !== null ? window.turnstile.getResponse(widgetId) : '';\n          if (!payload.turnstile) {\n            show('error', msg('verify', 'Please complete the security check above the button.'));\n            return;\n          }\n        }\n\n        show('sending', msg('sending', 'Sending your message …'));\n        if (submit) submit.disabled = true;\n\n        try {\n          const response = await fetch(form.action, {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify(payload),\n          });\n          if (!response.ok) throw new Error('request_failed');\n          form.reset();\n          show('success', msg('success', 'Thank you! Your message has been sent.'));\n        } catch {\n          show('error', msg('error', 'Something went wrong. Please try again later.'));\n        } finally {\n          if (submit) submit.disabled = false;\n          if (widgetId !== null) window.turnstile.reset(widgetId); // a token is valid only once\n        }\n      });\n    });\n  };\n\n  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);\n  else init();\n})();\n"
 };
 
 if (etch.blocks.isInComponentEditMode()) throw new Error('Leave the component edit mode first');

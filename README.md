@@ -13,7 +13,7 @@ Visitor's browser                Cloudflare Worker                    Your mail 
 
 - **No third-party form service.** Mail goes through your own mailbox. Optionally, [Resend](https://resend.com) is used as a fallback.
 - **Free tier friendly.** The worker is about 22 KB. Cloudflare's free plan covers 100,000 requests per day.
-- **Spam basics included.** The form has a honeypot field. The worker validates input on the server side and only accepts requests from your own domains (CORS allow-list).
+- **Spam protection built in.** The form has a honeypot field and optional [Cloudflare Turnstile](#8-optional-spam-protection-with-cloudflare-turnstile). The worker validates input on the server side and only accepts requests from your own domains (CORS allow-list).
 - **Accessible feedback.** Native form validation runs first. Sending, success and error are announced through a `role="status"` region, and a loading spinner shows in the button.
 
 ## What's in here
@@ -156,7 +156,8 @@ Then reload the tab, insert **ContactForm** on your contact page and set its pro
 | Endpoint (worker URL) | `https://api.example.com` | your worker URL from step 3 or 5 |
 | Privacy policy URL | `/privacy` | |
 | Submit button text | `Send message` | |
-| Message: sending / success / error | English defaults | translate as needed |
+| Message: sending / success / error / security check | English defaults | translate as needed |
+| Turnstile site key (empty = off) | *(empty)* | optional, see step 8 |
 
 **Option C – build it by hand**
 
@@ -176,6 +177,37 @@ The form only sends on the **published** site, not inside the builder. Publish, 
 - a spinner in the button and "Sending your message …"
 - the green success message, and the form clears
 - an email from **"Webform | example.com" &lt;no-reply@example.com&gt;**. Hitting *Reply* answers the visitor directly, because the worker sets `Reply-To`.
+
+### 8. Optional: spam protection with Cloudflare Turnstile
+
+[Turnstile](https://developers.cloudflare.com/turnstile/) is Cloudflare's free, privacy-friendly CAPTCHA alternative. Most visitors never see a puzzle. It is **off by default** and switches on per setting:
+
+| Site key prop | `TURNSTILE_SECRET` | Result |
+|---|---|---|
+| empty | not set | no Turnstile (default) |
+| set | set | widget is shown, the worker rejects submissions without a valid token |
+
+1. In the Cloudflare dashboard, go to **Turnstile → Add widget**. Add your hostnames: your domain, `www`, and your preview domain while testing. Use widget mode **Managed**.
+2. Put the **secret key** into the worker:
+   ```bash
+   npx wrangler secret put TURNSTILE_SECRET
+   ```
+3. Paste the **site key** into the component prop **Turnstile site key**, then save and publish.
+
+The script loads Turnstile only when a site key is set, renders the widget above the button, sends the token with the form, and resets the widget after each submission. A token is valid only once.
+
+Without a site key, nothing is loaded. If the secret is set but the site key isn't, every submission is rejected (`turnstile_failed`), so set both or neither.
+
+> Turnstile only works on the hostnames you registered. It doesn't work in the Etch builder or on `file://`.
+
+### 9. Recommended: rate limiting
+
+Browsers enforce the origin check, but a script can fake the `Origin` header. Add a rate-limiting rule so nobody can flood your inbox. The free plan includes one rule.
+
+Go to **Security → WAF → Rate limiting rules → Create rule**:
+- **If:** hostname equals `api.example.com` (or URI path for a route)
+- **Rate:** 5 requests per 1 minute, counted by IP
+- **Action:** Block for 1 minute
 
 ---
 
@@ -237,14 +269,12 @@ States you can hook into:
 
 ## Hardening ideas
 
-- **Rate limiting:** Add a Cloudflare WAF rate-limiting rule for the endpoint, for example 5 requests per minute per IP.
-- **Cloudflare Turnstile:** Add an invisible challenge and verify the token in the worker.
 - **Confirmation email** to the visitor: add a second `send` with the visitor as recipient. Mind your privacy policy.
 - When you go live, remove preview domains from `ALLOWED_ORIGINS`. Once the custom domain is set, consider `workers_dev = false`.
 
 ## Privacy
 
-The form data passes through Cloudflare, your worker, and then your mail server. The worker stores nothing. Logs contain request metadata and, on failure, the error message, but not the form content. Mention Cloudflare as a processor in your privacy policy.
+The form data passes through Cloudflare, your worker, and then your mail server. The worker stores nothing. Logs contain request metadata and, on failure, the error message, but not the form content. Mention Cloudflare as a processor in your privacy policy. If you use Turnstile, mention it too: it loads a script from `challenges.cloudflare.com` and checks the visitor's browser.
 
 ## License
 

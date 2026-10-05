@@ -73,6 +73,17 @@ function recipients(env) {
   return String(env.MAIL_TO || "").split(",").map((value) => value.trim()).filter(Boolean);
 }
 
+// Optional Cloudflare Turnstile: only checked when the secret TURNSTILE_SECRET is set.
+async function verifyTurnstile(env, token, ip) {
+  const body = new FormData();
+  body.append("secret", env.TURNSTILE_SECRET);
+  body.append("response", token);
+  if (ip) body.append("remoteip", ip);
+  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
+  const result = await response.json();
+  return result.success === true;
+}
+
 async function sendViaSmtp(env, mail) {
   const port = Number(env.SMTP_PORT || 587);
   await WorkerMailer.send(
@@ -144,6 +155,17 @@ export default {
     const errors = validate(data);
     if (errors.length) {
       return jsonResponse({ error: "validation_failed", fields: errors }, 422, origin, allowed);
+    }
+
+    if (env.TURNSTILE_SECRET) {
+      const token = String(data.turnstile ?? "").slice(0, 2048);
+      let verified = false;
+      try {
+        verified = Boolean(token) && (await verifyTurnstile(env, token, request.headers.get("CF-Connecting-IP")));
+      } catch (err) {
+        console.error("Turnstile verification failed", err);
+      }
+      if (!verified) return jsonResponse({ error: "turnstile_failed" }, 403, origin, allowed);
     }
 
     const name = sanitizeLine(data.name, LIMITS.name);
