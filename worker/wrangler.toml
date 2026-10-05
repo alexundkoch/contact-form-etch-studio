@@ -1,0 +1,35 @@
+name = "contact-form"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"] # required by worker-mailer
+
+# Reachable at https://contact-form.<your-subdomain>.workers.dev
+workers_dev = true
+
+# Optional: your own endpoint, e.g. https://api.example.com
+# Works as soon as the zone (example.com) is on Cloudflare – the DNS record and certificate are created on deploy.
+# routes = [
+#   { pattern = "api.example.com", custom_domain = true }
+# ]
+
+[vars]
+# Sites that may post to this worker (comma-separated, no trailing slash). Add your preview domain while testing.
+ALLOWED_ORIGINS = "https://example.com, https://www.example.com"
+SITE_NAME = "example.com"
+MAIL_FROM_NAME = "Webform | example.com"
+SMTP_PORT = "587" # 587 = STARTTLS, 465 = TLS. Port 25 is blocked on Cloudflare Workers.
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+# Secrets – never commit them. Set with `npx wrangler secret put <NAME>` or in the Cloudflare dashboard:
+#   SMTP_HOST       mail server hostname, e.g. mail.example.com
+#   SMTP_USER       SMTP login, usually the full mailbox address
+#   SMTP_PASSWORD   SMTP password
+#   MAIL_FROM       sender address – must be the SMTP login (most servers reject other senders)
+#   MAIL_TO         recipient(s), comma-separated
+#   RESEND_API_KEY  optional fallback
