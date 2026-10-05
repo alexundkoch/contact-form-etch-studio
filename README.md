@@ -32,7 +32,12 @@ Fields: name, email, phone (optional), subject, message, consent.
 
 - A Cloudflare account (free plan)
 - Node.js 18+
-- A mailbox with SMTP access, ideally a dedicated one like `no-reply@example.com`. You need its host, port (587 or 465), username and password.
+- A mailbox on your domain with SMTP access, ideally a dedicated one like `no-reply@example.com`. You need:
+  - `SMTP_HOST`, e.g. `mail.example.com`
+  - `SMTP_USER`, usually the full mailbox address
+  - `SMTP_PASSWORD`
+  - the port: 587 (STARTTLS) or 465 (TLS)
+- **SPF and DKIM DNS records** for your domain that cover this mail server. Your mail host provides the values. Without them, the mails end up in spam or get rejected. A DMARC record is recommended.
 
 ### 2. Get the code
 
@@ -215,7 +220,7 @@ To see the error, run `npx wrangler tail` in `worker/` and send the form again. 
 | `origin_not_allowed` | Add the domain to `ALLOWED_ORIGINS` exactly (`https://…`, no trailing slash) and deploy. |
 | `turnstile_failed` | Set the site key prop, register the hostname in the widget, and use the site key and secret from the same widget. |
 | Turnstile box missing | Check the site key prop and publish. Ad blockers can block `challenges.cloudflare.com`. |
-| Mail lands in spam | SPF, DKIM and DMARC must cover your mail server. On Cloudflare DNS, set mail records to **DNS only**. |
+| Mail lands in spam | Check the SPF and DKIM records (step 1). On Cloudflare DNS, set mail records to **DNS only**. |
 | Styles gone after reload (Etch) | Class styles created via the API are saved only with the builder. Save before you reload. |
 
 ## Before going live

@@ -1,6 +1,5 @@
 // Contact form → email. Receives the form as JSON (fetch from the Etch Studio site),
 // validates it and sends it through your own SMTP server (port 587 STARTTLS or 465 TLS).
-// Optional fallback: Resend (https://resend.com) when RESEND_API_KEY is set.
 import { WorkerMailer } from "worker-mailer";
 
 const LIMITS = { name: 120, email: 200, phone: 50, subject: 200, message: 5000 };
@@ -107,22 +106,6 @@ async function sendViaSmtp(env, mail) {
   );
 }
 
-// Fallback (only if RESEND_API_KEY is set); the domain of MAIL_FROM must be verified at Resend.
-async function sendViaResend(env, mail) {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: `${env.MAIL_FROM_NAME || "Website contact form"} <${env.MAIL_FROM}>`,
-      to: recipients(env),
-      reply_to: `${mail.replyToName} <${mail.replyToEmail}>`,
-      subject: mail.subject,
-      text: mail.text,
-    }),
-  });
-  if (!response.ok) throw new Error(`resend_failed: ${await response.text()}`);
-}
-
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") ?? "";
@@ -179,15 +162,9 @@ export default {
 
     try {
       await sendViaSmtp(env, mail);
-    } catch (smtpError) {
-      console.error("SMTP send failed", smtpError);
-      if (!env.RESEND_API_KEY) return jsonResponse({ error: "send_failed" }, 502, origin, allowed);
-      try {
-        await sendViaResend(env, mail);
-      } catch (resendError) {
-        console.error("Resend fallback failed", resendError);
-        return jsonResponse({ error: "send_failed" }, 502, origin, allowed);
-      }
+    } catch (err) {
+      console.error("SMTP send failed", err);
+      return jsonResponse({ error: "send_failed" }, 502, origin, allowed);
     }
 
     return jsonResponse({ ok: true }, 200, origin, allowed);
