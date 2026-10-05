@@ -187,16 +187,48 @@ The form only sends on the **published** site, not inside the builder. Publish, 
 | empty | not set | no Turnstile (default) |
 | set | set | widget is shown, the worker rejects submissions without a valid token |
 
-1. In the Cloudflare dashboard, go to **Turnstile → Add widget**. Add your hostnames: your domain, `www`, and your preview domain while testing. Use widget mode **Managed**.
-2. Put the **secret key** into the worker:
+**Step by step**
+
+1. **Create the widget.** In the Cloudflare dashboard, open **Turnstile → Add widget** and fill in:
+   - **Widget name:** anything, e.g. `Contact form`
+   - **Hostnames:** your domain, `www.` + your domain, and your preview domain while you test (e.g. `my-site.example.workers.dev`)
+   - **Widget mode:** **Managed**. Cloudflare decides whether a checkbox is needed, most visitors only see a short "Verifying …".
+
+   After saving you get two keys: a **site key**, which is public and goes into the page, and a **secret key**, which is private and goes into the worker.
+
+2. **Add the secret key to the worker** (in `worker/`):
    ```bash
    npx wrangler secret put TURNSTILE_SECRET
    ```
-3. Paste the **site key** into the component prop **Turnstile site key**, then save and publish.
+   It takes effect immediately, so you don't need to deploy again.
 
-The script loads Turnstile only when a site key is set, renders the widget above the button, sends the token with the form, and resets the widget after each submission. A token is valid only once.
+3. **Add the site key to the form.** In Etch Studio, select the **ContactForm** component and paste the site key into the prop **Turnstile site key (empty = off)**. Save and publish.
 
-Without a site key, nothing is loaded. If the secret is set but the site key isn't, every submission is rejected (`turnstile_failed`), so set both or neither.
+   Do steps 2 and 3 right after each other: while only the secret is set, the worker rejects every submission.
+
+4. **Test it.**
+   - Open your published contact page. Above the button, the Turnstile box appears and shows "Success!" after a moment.
+   - Send the form. The email arrives as before.
+   - Check that the worker blocks requests without a token. This one must answer `{"error":"turnstile_failed"}`:
+     ```bash
+     curl -X POST https://api.example.com \
+       -H "Origin: https://example.com" -H "Content-Type: application/json" \
+       -d '{"name":"Test","email":"test@example.com","subject":"Test","message":"Test","consent":true}'
+     ```
+
+**How it works**
+
+- The script loads Turnstile only when a site key is set. It renders the widget above the button, sends the token with the form, and resets the widget after each submission, because a token is valid only once.
+- The worker checks the token with Cloudflare's `siteverify` API, together with the visitor's IP, before it sends any email.
+- To switch Turnstile off again, empty the site key prop and delete the secret: `npx wrangler secret delete TURNSTILE_SECRET`.
+
+**Testing locally**
+
+Cloudflare provides [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) that always pass or always fail:
+- Site key `1x00000000000000000000AA` (passes) together with secret `1x0000000000000000000000000000000AA` (passes)
+- Secret `2x0000000000000000000000000000000AA` (always fails)
+
+For example: `npx wrangler dev --var TURNSTILE_SECRET:1x0000000000000000000000000000000AA`.
 
 > Turnstile only works on the hostnames you registered. It doesn't work in the Etch builder or on `file://`.
 
@@ -261,6 +293,8 @@ States you can hook into:
 | `origin_not_allowed` (HTTP 403) | The site's origin is missing from `ALLOWED_ORIGINS`. | Add it exactly (`https://…`, no trailing slash) and deploy. |
 | Timeout / connection refused | Wrong host or port, or port 25 used. Cloudflare Workers can't connect on port 25. | Use 587 (STARTTLS) or 465 (TLS). |
 | `535 Authentication failed` | Wrong username or password. | Re-run `wrangler secret put SMTP_USER` / `SMTP_PASSWORD`. |
+| `turnstile_failed` (HTTP 403) | `TURNSTILE_SECRET` is set, but the token is missing or invalid. Typical causes: the site key prop is empty, the hostname isn't registered in the Turnstile widget, or site key and secret belong to different widgets. | Set the site key prop, add the hostname to the widget, or check the key pair. To switch Turnstile off, delete the secret. |
+| The Turnstile box doesn't appear | The site key prop is empty, the page isn't published yet, or a content blocker blocks `challenges.cloudflare.com`. | Check the prop and publish again. Test in a private window without extensions. |
 | Works with `curl`, fails in the browser | The browser still uses an old endpoint, or DNS for a new custom domain is negatively cached. | Check the published `<form action>`; wait out the DNS cache (see step 5). |
 
 **Mail arrives in spam.** Make sure your domain's SPF, DKIM and DMARC records cover the mail server you send through. If your DNS is on Cloudflare, mail-related records (MX, SPF, DKIM, DMARC, autodiscover) must be **DNS only** (grey cloud), never proxied.
