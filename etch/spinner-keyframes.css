@@ -1,0 +1,6 @@
+/* Add once to any Etch Studio stylesheet (e.g. "Main") – makes the loading spinner of the contact form turn. */
+@keyframes contact-form-spin {
+  to {
+    rotate: 1turn;
+  }
+}

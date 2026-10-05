@@ -22,6 +22,7 @@ Visitor's browser                Cloudflare Worker                    Your mail 
 |---|---|
 | [`worker/`](worker/) | The Cloudflare Worker: [`src/index.js`](worker/src/index.js) and [`wrangler.toml`](worker/wrangler.toml). |
 | [`etch/contact-form.etch.json`](etch/contact-form.etch.json) | **Copy & paste into Etch Studio:** the component with styles and script, in Etch's clipboard format. |
+| [`etch/spinner-keyframes.css`](etch/spinner-keyframes.css) | The `@keyframes` for the loading spinner. Paste them once into an Etch stylesheet. |
 | [`etch/create-component.js`](etch/create-component.js) | Alternative: creates the Etch component **ContactForm** in your project (styles, props, script) via the Etch Connector. |
 | [`etch/contact-form.html`](etch/contact-form.html) | The same form as plain HTML, to copy and paste. |
 | [`etch/contact-form.css`](etch/contact-form.css) | All styles. BEM block `.contact-form`, themeable via `--contact-form-*` custom properties. |
@@ -117,7 +118,7 @@ A subdomain is safer than a path route like `example.com/api/contact`, because i
 
 1. Open [`contact-form.etch.json`](etch/contact-form.etch.json). On GitHub, use the *Raw* button or the copy icon, and copy the **entire** content.
 2. In the Etch Studio builder, select the spot where the form should go, for example inside a container, and paste (`Cmd/Ctrl + V`).
-3. Add the keyframes for the loading spinner to one of your stylesheets, for example **Main**. Etch's clipboard format carries class styles but no stylesheets:
+3. **Add the spinner keyframes.** Copy this into one of your Etch stylesheets, for example **Main**. Etch's clipboard format carries class styles but no stylesheets, so this step is needed once:
 
    ```css
    @keyframes contact-form-spin {
@@ -127,7 +128,8 @@ A subdomain is safer than a path route like `example.com/api/contact`, because i
    }
    ```
 
-   Without this, the form works, but the spinner doesn't turn.
+   > [!IMPORTANT]
+   > Without these keyframes, the form still sends, but the loading spinner in the button doesn't turn. The same snippet is in [`etch/spinner-keyframes.css`](etch/spinner-keyframes.css).
 4. Set the component's props (see below) and save.
 
 **Option B – create the component with the Etch Connector**
